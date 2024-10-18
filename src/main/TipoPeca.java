@@ -2,6 +2,9 @@ package main;
 
 public enum TipoPeca {
     PEAO("Peao", 1),
+    BISPO("Bispo", 3),
+    CAVALO("Cavalo", 3),
+    RAINHA("Rainha", 9),
     REI("Rei", Integer.MAX_VALUE),
     TORRE("Torre", 5);
     private final String nome;
