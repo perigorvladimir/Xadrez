@@ -1,8 +1,8 @@
 package main;
 
 public class Posicao {
-    protected short x;
-    protected short y;
+    public short x;
+    public short y;
 
     public Posicao(int x, int y){
         this.x = (short)x;
