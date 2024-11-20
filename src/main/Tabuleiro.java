@@ -1,10 +1,11 @@
 package main;
 
-import jdk.jshell.spi.ExecutionControlProvider;
+
 import main.model.*;
 
 public class Tabuleiro {
     private Peca[][] tabuleiro = new Peca[8][8]; //coluna,linha
+    private boolean turnoDasBrancas = true;
 
     public Tabuleiro(){
         tabuleiro[0][0] = new Torre(TipoPeca.TORRE, false);
@@ -49,12 +50,16 @@ public class Tabuleiro {
         if(posicaoFinal.x>7 || posicaoFinal.y>7){
             return false;
         }
+        if(!checkTurno(getPosicao(posicaoInicial).isBlack())){
+            return false;
+        }
         if(tabuleiro[posicaoFinal.x][posicaoFinal.y]!=null && getPosicao(posicaoFinal).isBlack()==peca.isBlack()){
             return false;
         }
         if(peca.isMovimentoValido(posicaoInicial, posicaoFinal, getPosicao(posicaoFinal)!=null)){
             tabuleiro[posicaoFinal.x][posicaoFinal.y] = peca;
             tabuleiro[posicaoInicial.x][posicaoInicial.y] = null;
+            passarTurno();
             return true;
         }
         return false;
@@ -64,25 +69,17 @@ public class Tabuleiro {
     }
 
     private int getColunaPorLetra(char coluna){
-        switch(coluna){
-            case 'a':
-                return 0;
-            case 'b':
-                return 1;
-            case 'c':
-                return 2;
-            case 'd':
-                return 3;
-            case 'e':
-                return 4;
-            case 'f':
-                return 5;
-            case 'g':
-                return 6;
-            case 'h':
-                return 7;
-        }
-        return -1;
+        return switch (coluna) {
+            case 'a' -> 0;
+            case 'b' -> 1;
+            case 'c' -> 2;
+            case 'd' -> 3;
+            case 'e' -> 4;
+            case 'f' -> 5;
+            case 'g' -> 6;
+            case 'h' -> 7;
+            default -> -1;
+        };
     }
 
     private Posicao getPosicaoByString(String posicaoString){
@@ -90,6 +87,14 @@ public class Tabuleiro {
             throw new RuntimeException("a posicao passada por string nao pode ter mais de 2 caracteres");
         }
         return new Posicao(getColunaPorLetra(posicaoString.charAt(0)), Character.getNumericValue(posicaoString.charAt(1)-1));
+    }
+
+    private boolean checkTurno(boolean isBlack){
+        return this.turnoDasBrancas==!isBlack;
+    }
+
+    private void passarTurno(){
+        this.turnoDasBrancas=!this.turnoDasBrancas;
     }
 
     public void print(){
