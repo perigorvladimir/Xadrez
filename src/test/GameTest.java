@@ -20,6 +20,7 @@ public class GameTest {
     }
     @Test
     public void testarTabuleiroInicial(){
+        logger.info(() -> "começando testes");
         assertEquals(new Torre(TipoPeca.TORRE, false),tabuleiro.getPosicao(0, 0));
         assertEquals(new Cavalo(TipoPeca.CAVALO, false), tabuleiro.getPosicao(1, 0));
         assertEquals(new Bispo(TipoPeca.BISPO, false), tabuleiro.getPosicao(2, 0));
@@ -101,7 +102,7 @@ public class GameTest {
     public void testarCapturaBasicaPreta(){
         tabuleiro.mover(new Posicao(4,1),new Posicao(4,3));
         tabuleiro.mover(new Posicao(5,6),new Posicao(5,4));
-        tabuleiro.mover(new Posicao(1,0), new Posicao(2,3));
+        tabuleiro.mover(new Posicao(1,0), new Posicao(2,2));
         assertTrue(tabuleiro.mover(new Posicao(5,4), new Posicao(4,3)));
         assertNull(tabuleiro.getPosicao(5,4));
         assertEquals(new Peao(TipoPeca.PEAO, true), tabuleiro.getPosicao(4,3));
@@ -111,9 +112,35 @@ public class GameTest {
         assertFalse(tabuleiro.mover(new Posicao(6,0), new Posicao(8,1)));
     }
     @Test
-    public void testarMovimentoBasicoBispo(){
+    public void testarMovimentoValidoPeao(){
+        assertFalse(tabuleiro.mover("d2", "d5"));
         tabuleiro.mover("d2", "d4");
+        assertFalse(tabuleiro.mover("a7", "a4"));
+        tabuleiro.mover("a7", "a5");
+        assertFalse(tabuleiro.mover("d4", "d6")); // tentar andar duas casas no segundo movimento do peao branco
+        assertFalse(tabuleiro.mover("d4", "e5")); // tentar fazer movimento de captura sem ser captura branco
+        tabuleiro.mover("d4","d5");
+        assertFalse(tabuleiro.mover("a5", "a3")); // tentar andar duas casas no segundo movimento do peao preto
+        assertFalse(tabuleiro.mover("a5", "b4")); // tentar fazer movimento de captura sem ser captura preto
+        tabuleiro.mover("a5", "a4");
+        assertTrue(tabuleiro.mover("e2", "e4")); // mover 2 casas de outro peao branco
+    }
+
+    @Test
+    public void testarMovimentoBasicoBispo(){
+        logarPosicao("d2");
+        tabuleiro.mover("d2", "d5");
         tabuleiro.mover("e7","e5");
+    }
+    @Test
+    public void testarTentarMoverMesmaCorSeguida(){
+        tabuleiro.mover("d2", "d4"); // movimento brancas
+        assertFalse(tabuleiro.mover("d4", "d5"));
+        tabuleiro.mover("d7", "d5"); // movimento negras
+        assertFalse(tabuleiro.mover("e7", "e5"));
+    }
+    private void logarPosicao(String posicao){
+        logger.info(() -> tabuleiro.getPosicao(posicao).getTipoPeca().getNome() + ", cor: " + tabuleiro.getPosicao(posicao).isBlack());
     }
 }
 
