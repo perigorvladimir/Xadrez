@@ -29,7 +29,11 @@ public class Peao extends Peca{
         }
         if(posicaoFinal.x == posicaoInicial.x) {
             if(isPrimeiroMovimento){
-                return posicaoFinal.y == posicaoInicial.y + direcao || posicaoFinal.y == posicaoInicial.y + direcao + direcao;
+                if(posicaoFinal.y == posicaoInicial.y + direcao || posicaoFinal.y == posicaoInicial.y + direcao + direcao){
+                    isPrimeiroMovimento=false;
+                    return true;
+                }
+                return false;
             }
             return posicaoFinal.y == posicaoInicial.y+direcao;
         }
